@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Open Multiple HTML Windows in Iframes</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            height: 100vh;
+            background-color: #f3f3f3;
+            overflow: auto;
+        }
+
+        #controls, #linkControls {
+            margin: 20px;
+            padding: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #fff;
+        }
+
+        input {
+            padding: 5px;
+            margin: 5px;
+            width: 200px;
+        }
+
+        button {
+            padding: 10px 15px;
+            cursor: pointer;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        #message {
+            margin-top: 20px;
+            color: green;
+        }
+
+        .iframe-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            position: relative; /* Make this relative for absolute positioning of canvas */
+        }
+
+        iframe {
+            border: 1px solid #ccc;
+            margin: 5px;
+            width: 300px;
+            height: 200px;
+            border-radius: 5px;
+        }
+
+        #canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            pointer-events: none; /* Allow clicks to go through to iframes */
+        }
+    </style>
+</head>
+<body>
+    <h1>Open Multiple HTML Windows in Iframes</h1>
+    <div id="controls">
+        <h2>Open Iframe</h2>
+        <input type="text" id="url" placeholder="Enter HTML file URL" required>
+        <input type="text" id="windowName" placeholder="Iframe Name" required>
+        <button id="openIframe">Open Iframe</button>
+    </div>
+
+    <div id="linkControls">
+        <h2>Link Iframes</h2>
+        <input type="text" id="fromWindow" placeholder="From Iframe Name" required>
+        <input type="text" id="toWindow" placeholder="To Iframe Name" required>
+        <button id="linkIframes">Link Iframes</button>
+    </div>
+
+    <button id="viewLinks">View Link Details</button>
+
+    <div id="message"></div>
+
+    <div class="iframe-container" id="iframeContainer">
+        <canvas id="canvas"></canvas>
+    </div>
+
+    <script>
+        const openedIframes = {};
+        const iframeLinks = {};
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+
+        // Resize the canvas to match the iframe container
+        function resizeCanvas() {
+            canvas.width = document.getElementById('iframeContainer').offsetWidth;
+            canvas.height = document.getElementById('iframeContainer').offsetHeight;
+        }
+
+        // Draw links on the canvas
+        function drawLinks() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas
+
+            for (const from in iframeLinks) {
+                const fromIframe = openedIframes[from];
+                const fromRect = fromIframe.getBoundingClientRect();
+                const fromX = fromRect.x + fromRect.width / 2;
+                const fromY = fromRect.y + fromRect.height / 2;
+
+                iframeLinks[from].forEach(to => {
+                    const toIframe = openedIframes[to];
+                    const toRect = toIframe.getBoundingClientRect();
+                    const toX = toRect.x + toRect.width / 2;
+                    const toY = toRect.y + toRect.height / 2;
+
+                    // Draw a line from the center of the from iframe to the center of the to iframe
+                    ctx.beginPath();
+                    ctx.moveTo(fromX, fromY);
+                    ctx.lineTo(toX, toY);
+                    ctx.strokeStyle = 'blue';
+                    ctx.lineWidth = 2;
+                    ctx.stroke();
+                });
+            }
+        }
+
+        document.getElementById('openIframe').addEventListener('click', function() {
+            const url = document.getElementById('url').value;
+            const windowName = document.getElementById('windowName').value;
+
+            if (url && windowName) {
+                // Create a new iframe element
+                const iframe = document.createElement('iframe');
+                iframe.src = url;
+                iframe.name = windowName;
+
+                // Append the iframe to the container
+                document.getElementById('iframeContainer').appendChild(iframe);
+                openedIframes[windowName] = iframe;
+
+                displayMessage(`Iframe "${windowName}" opened successfully.`);
+                clearInputs();
+                resizeCanvas();
+                drawLinks();
+            } else {
+                alert('Please enter a valid URL and iframe name.');
+            }
+        });
+
+        document.getElementById('linkIframes').addEventListener('click', function() {
+            const fromName = document.getElementById('fromWindow').value;
+            const toName = document.getElementById('toWindow').value;
+
+            const fromIframe = openedIframes[fromName];
+            const toIframe = openedIframes[toName];
+
+            if (fromIframe && toIframe) {
+                if (!iframeLinks[fromName]) {
+                    iframeLinks[fromName] = [];
+                }
+                iframeLinks[fromName].push(toName);
+
+                toIframe.contentWindow.postMessage(`Linked from ${fromName}`, '*');
+                displayMessage(`Linked "${fromName}" to "${toName}".`);
+                drawLinks(); // Redraw links after adding a new one
+            } else {
+                alert('Please enter valid iframe names.');
+            }
+        });
+
+        document.getElementById('viewLinks').addEventListener('click', function() {
+            const linkDetails = JSON.stringify(iframeLinks, null, 2);
+            alert(`Link Details:\n${linkDetails}`);
+        });
+
+        window.addEventListener('message', (event) => {
+            console.log('Message received:', event.data);
+            alert(event.data);
+        });
+
+        function clearInputs() {
+            document.getElementById('url').value = '';
+            document.getElementById('windowName').value = '';
+        }
+
+        function displayMessage(msg) {
+            const messageDiv = document.getElementById('message');
+            messageDiv.textContent = msg;
+            setTimeout(() => { messageDiv.textContent = ''; }, 3000);
+        }
+
+        // Resize canvas on window resize
+        window.addEventListener('resize', () => {
+            resizeCanvas();
+            drawLinks(); // Redraw links on resize
+        });
+
+        // Initial canvas size
+        resizeCanvas();
+    </script>
+</body>
+</html>

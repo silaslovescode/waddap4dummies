@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A-Frame Image Plane with Light</title>
+    <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
+</head>
+<body>
+    <a-assets>
+        <img id="phone" crossorigin="anonymous" src="https://github.com/silaslovescode/whatsdapp./blob/main/phone.png?raw=true">
+    </a-assets>
+
+    <a-scene>
+        <!-- Light source -->
+        <a-light type="directional" position="0 4 2" intensity="10" target="#plane"></a-light>
+
+        <!-- Plane with the image, double-sided -->
+        <a-plane src="#phone" position="0 1.6 -2" rotation="0 0 0" width="2" height="4" transparent="true" side="double"></a-plane>
+        
+        <!-- Sky color -->
+        <a-sky color="#ECECEC"></a-sky>
+        
+        <!-- Camera entity -->
+        <a-entity position="0 0 6">
+            <a-camera user-height="1"></a-camera>
+        </a-entity>
+    </a-scene>
+</body>
+</html>

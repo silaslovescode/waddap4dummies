@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Nai Radar</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden; /* Remove vertical scroll bar */
+            background-image: url("workplace.jpg");
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .container {
+            position: relative;
+            text-align: center;
+            display: flex;
+            justify-content: center;
+            align-items: center; /* Align content at the center */
+        }
+        img.phone-image {
+            position: absolute;
+            left: 0;
+            top: 0;
+            z-index: 2; /* Set a positive value to place it above other elements */
+        }
+        body, html {
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+            height: 100%;
+        }
+        body {
+            margin: 0;
+            padding: 0;
+            background-image: url("workplace.jpg");
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .time-overlay {
+            position: absolute;
+            top: 10px; /* Adjust as needed */
+            right: 15px; /* Adjust as needed */
+            color: white;
+            font-size: 16px;
+            background-color: black; /* Add this line */
+            padding: 5px; /* Optional: Add padding for better readability */
+        }
+        /* Style the iframe */
+        iframe {
+            position: absolute;
+            width: 90%; /* Adjust the width as needed for responsiveness */
+            height: 90%; /* Adjust the height as needed for responsiveness */
+            max-width: 720px; /* Ensure it doesn't exceed this size */
+            max-height: 1300px; /* Ensure it doesn't exceed this size */
+            top: 50%; /* Align iframe vertically */
+            left: 50%; /* Align iframe horizontally */
+            transform: translate(-50%, -50%); /* Center the iframe */
+            z-index: 2; /* Set it above other elements */
+            border: none; /* Remove border */
+        }
+    </style>
+    <hta:application applicationname="PitchBlack" scroll="no" singleinstance="yes">
+    <script type="text/javascript">
+        function openURL() {
+            var shell = new ActiveXObject("WScript.Shell");
+            shell.run("https://www.google.com");
+        }
+    </script>
+</head>
+<body>
+
+    <script>
+        function updateTime() {
+            const now = new Date();
+            const hours = now.getHours().toString().padStart(2, '0');
+            const minutes = now.getMinutes().toString().padStart(2, '0');
+            const seconds = now.getSeconds().toString().padStart(2, '0');
+            document.getElementById('time').textContent = `${hours}:${minutes}:${seconds}`;
+        }
+        // Update time every second
+        setInterval(updateTime, 1000);
+    </script>
+    <script type="text/javascript">
+        window.resizeTo(440, 440);
+    </script>
+    <div style="position: relative; display: flex; justify-content: center; align-items: center; height: 100vh;">
+    
+
+               <!-- Load the iframe <iframe src="https://silaslovescode.github.io/Radar-Radar/" frameborder="0" scrolling="no"></iframe> -->
+
+
+        <!-- Phone image -->
+        <img id="img1" src="phone.png" alt="Workplace" usemap="#image-map" width="946" height="1664" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+
+        <!-- Image container -->
+        <div class="container">
+            <img src="1.png" alt="1" style="width: 100%;">
+            <img id="1" src="1.png" alt="1" usemap="#image-map" width="720" height="1280" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+            <div class="time-overlay"><span id="time"></span></div>
+        </div>
+    </div>
+
+    <map name="image-map">
+        <!-- Define image map areas -->
+        <area target="_self" alt="" title="0" href="1.html" coords="365,539,96" shape="circle">
+        <area target="_self" alt="" title="1" href="2.html" coords="680,993,586,897" shape="rect">
+        <area target="_self" alt="" title="2" href="3.html" coords="130,1173,50,1059" shape="0">
+        <area target="_self" alt="" title="3" href="4.html" coords="234,1063,308,1173" shape="0">
+        <area target="_self" alt="" title="4" href="5.html" coords="404,1069,490,1177" shape="0">
+        <area target="_self" alt="" title="5" href="6.html" coords="588,1061,664,1175" shape="0">
+    </map>
+
+</body>
+</html>

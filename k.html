@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Linked Iframes</title>
+    <style>
+        body {
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #000;
+        }
+
+        .container {
+            position: relative;
+            width: 80%;
+            height: 70%;
+        }
+
+        iframe {
+            width: 45%;
+            height: 80%;
+            border: 2px solid #ccc;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .iframe-left {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            transform: translateY(-50%);
+        }
+
+        .iframe-right {
+            position: absolute;
+            top: 50%;
+            right: 0;
+            transform: translateY(-50%);
+        }
+
+        .link-line {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 50%;
+            height: 20px; /* Thickness of the line */
+            background-image: url('https://raw.githubusercontent.com/silaslovescode/polychain/refs/heads/main/Capre.PNG?text=+'); /* Replace with your line image */
+            background-size: contain;
+            background-repeat: repeat-x;
+            background-position: center;
+            z-index: -1;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Left iframe -->
+        <iframe class="iframe-left" src="https://silaslovescode.github.io/whatsdapp./" title="Left Iframe"></iframe>
+
+        <!-- Right iframe -->
+        <iframe class="iframe-right" src="https://silaslovescode.github.io/whatsdapp./" title="Right Iframe"></iframe>
+
+        <!-- Connecting line -->
+        <div class="link-line"></div>
+    </div>
+</body>
+</html>
